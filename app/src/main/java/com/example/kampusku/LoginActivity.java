@@ -1,52 +1,51 @@
 package com.example.kampusku;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.kampusku.ApiHelper.BaseApiHelper;
+import com.example.kampusku.ApiHelper.UtilsApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText mViewUser, mViewPassword;
+    EditText etEmail;
+    EditText etPassword;
+    Button btnLogin;
+    Button btnRegister;
+    ProgressDialog loading;
+
+    Context mContext;
+    BaseApiHelper mApiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        /* Menginisialisasi variable dengan Form User dan Form Password dari Layout LoginActivity */
-        mViewUser=findViewById(R.id.iemail);
-        mViewPassword =findViewById(R.id.ipassword);
-        /* Menjalankan Method razia() Jika tombol SignIn di keyboard di sentuh */
-        mViewPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_NULL) {
-                    razia();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        /* Menjalankan Method razia() jika merasakan tombol SignIn disentuh */
-        findViewById(R.id.blogin).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                razia();
-            }
-        });
-        /* Ke RegisterActivity jika merasakan tombol SignUp disentuh */
-        findViewById(R.id.bregis).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(),RegisterActivity.class));
-            }
-        });
+        mContext = this;
+        mApiService = UtilsApi.getAPIService(); // meng-init yang ada di package apihelper
+        initComponents();
     }
 
     /** ke MainActivity jika data Status Login dari Data Preferences bernilai true */
@@ -59,60 +58,64 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /** Men-check inputan User dan Password dan Memberikan akses ke MainActivity */
-    private void razia(){
-        /* Mereset semua Error dan fokus menjadi default */
-        mViewUser.setError(null);
-        mViewPassword.setError(null);
-        View fokus = null;
-        boolean cancel = false;
+    private void initComponents() {
+        etEmail = (EditText) findViewById(R.id.iemail);
+        etPassword = (EditText) findViewById(R.id.ipassword);
+        btnLogin = (Button) findViewById(R.id.blogin);
+        btnRegister = (Button) findViewById(R.id.bregis);
 
-        /* Mengambil text dari form User dan form Password dengan variable baru bertipe String*/
-        String user = mViewUser.getText().toString();
-        String password = mViewPassword.getText().toString();
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loading = ProgressDialog.show(mContext, null, "Harap Tunggu...", true, false);
+                requestLogin();
+            }
+        });
 
-        /* Jika form user kosong atau TIDAK memenuhi kriteria di Method cekUser() maka, Set error
-         *  di Form User dengan menset variable fokus dan error di Viewnya juga cancel menjadi true*/
-        if (TextUtils.isEmpty(user)){
-            mViewUser.setError("This field is required");
-            fokus = mViewUser;
-            cancel = true;
-        }else if(!cekUser(user)){
-            mViewUser.setError("This Username is not found");
-            fokus = mViewUser;
-            cancel = true;
-        }
-
-        /* Sama syarat percabangannya dengan User seperti di atas. Bedanya ini untuk Form Password*/
-        if (TextUtils.isEmpty(password)){
-            mViewPassword.setError("This field is required");
-            fokus = mViewPassword;
-            cancel = true;
-        }else if (!cekPassword(password)){
-            mViewPassword.setError("This password is incorrect");
-            fokus = mViewPassword;
-            cancel = true;
-        }
-
-        /* Jika cancel true, variable fokus mendapatkan fokus */
-        if (cancel) fokus.requestFocus();
-        else masuk();
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, RegisterActivity.class));
+            }
+        });
     }
 
-    /** Menuju ke MainActivity dan Set User dan Status sedang login, di Preferences */
-    private void masuk(){
-        Preferences.setLoggedInUser(getBaseContext(),Preferences.getRegisteredUser(getBaseContext()));
-        Preferences.setLoggedInStatus(getBaseContext(),true);
-        startActivity(new Intent(getBaseContext(),MainActivity.class));finish();
-    }
 
-    /** True jika parameter password sama dengan data password yang terdaftar dari Preferences */
-    private boolean cekPassword(String password){
-        return password.equals(Preferences.getRegisteredPass(getBaseContext()));
-    }
+    private void requestLogin() {
+        mApiService.loginRequest(etEmail.getText().toString(), etPassword.getText().toString())
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            loading.dismiss();
+                            try {
+                                JSONObject jsonRESULTS = new JSONObject(response.body().string());
+                                if (jsonRESULTS.getString("status").equals("true")) {
+                                    // Jika login berhasil maka data nama yang ada di response API
+                                    // akan diparsing ke activity selanjutnya.
 
-    /** True jika parameter user sama dengan data user yang terdaftar dari Preferences */
-    private boolean cekUser(String user){
-        return user.equals(Preferences.getRegisteredUser(getBaseContext()));
+                                    String name = jsonRESULTS.getJSONObject("data").getString("name");
+                                    Toast.makeText(mContext, "BERHASIL LOGIN "+name, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(mContext, MainActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    // Jika login gagal
+                                    String error_message = jsonRESULTS.getString("error_msg");
+                                    Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            loading.dismiss();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("debug", "onFailure: ERROR > " + t.toString());
+                        loading.dismiss();
+                    }
+
+                });
     }
 }
