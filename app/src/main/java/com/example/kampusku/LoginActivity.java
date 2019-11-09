@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.example.kampusku.ApiHelper.AccessToken;
 import com.example.kampusku.ApiHelper.BaseApiHelper;
 import com.example.kampusku.ApiHelper.UtilsApi;
 
@@ -48,15 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         initComponents();
     }
 
-    /** ke MainActivity jika data Status Login dari Data Preferences bernilai true */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (Preferences.getLoggedInStatus(getBaseContext())){
-            startActivity(new Intent(getBaseContext(),MainActivity.class));
-            finish();
-        }
-    }
 
     private void initComponents() {
         etEmail = (EditText) findViewById(R.id.iemail);
@@ -88,27 +81,15 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
                             loading.dismiss();
-                            try {
-                                JSONObject jsonRESULTS = new JSONObject(response.body().string());
-                                if (jsonRESULTS.getString("status").equals("true")) {
-                                    // Jika login berhasil maka data nama yang ada di response API
-                                    // akan diparsing ke activity selanjutnya.
-
-                                    String name = jsonRESULTS.getJSONObject("data").getString("name");
-                                    Toast.makeText(mContext, "BERHASIL LOGIN "+name, Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(mContext, MainActivity.class);
-                                    startActivity(intent);
+                            Toast.makeText(mContext, "Berhasil Login", Toast.LENGTH_SHORT).show();
+                            loading.dismiss();
+                            Intent intent = new Intent(mContext, MainActivity.class);
+                            startActivity(intent);
                                 } else {
                                     // Jika login gagal
-                                    String error_message = jsonRESULTS.getString("error_msg");
-                                    Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
+                                    loading.dismiss();
                                 }
-                            } catch (JSONException | IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            loading.dismiss();
-                        }
                     }
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
@@ -118,4 +99,5 @@ public class LoginActivity extends AppCompatActivity {
 
                 });
     }
+
 }

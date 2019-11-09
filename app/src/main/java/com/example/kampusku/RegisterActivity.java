@@ -79,24 +79,13 @@ public class RegisterActivity extends AppCompatActivity {
                         if (response.isSuccessful()){
                             Log.i("debug", "onResponse: BERHASIL");
                             loading.dismiss();
-                            try {
-                                JSONObject jsonRESULTS = new JSONObject(response.body().string());
-                                if (jsonRESULTS.getString("error").equals("false")){
                                     Toast.makeText(mContext, "BERHASIL REGISTRASI", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(mContext, LoginActivity.class));
                                 } else {
-                                    String error_message = jsonRESULTS.getString("error_msg");
-                                    Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "Gagal", Toast.LENGTH_SHORT).show();
+                                    Log.i("debug", "onResponse: GA BERHASIL");
+                                    loading.dismiss();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Log.i("debug", "onResponse: GA BERHASIL");
-                            loading.dismiss();
-                        }
                     }
 
                     @Override
