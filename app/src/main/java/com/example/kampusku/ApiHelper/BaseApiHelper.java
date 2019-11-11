@@ -1,5 +1,7 @@
 package com.example.kampusku.ApiHelper;
 
+import com.example.kampusku.Kampus.GetKampus;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -21,6 +23,9 @@ public interface BaseApiHelper {
                                        @Field("email") String email,
                                        @Field("password") String password,
                                        @Field("c_password") String c_password);
+
+    @GET("kampus/")
+    Call<GetKampus> getKampus();
 
 
 }
