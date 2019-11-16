@@ -1,5 +1,6 @@
 package com.example.kampusku.Kampus;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 public class GetKampus {
 
     String status;
-    List<ResultKampus> result;
+    List<ResultKampus> result = null;
     String message;
 
     public String getStatus() {

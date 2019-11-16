@@ -8,6 +8,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface BaseApiHelper {
 
@@ -26,6 +27,9 @@ public interface BaseApiHelper {
 
     @GET("kampus/")
     Call<GetKampus> getKampus();
+
+    @GET("kampus/search/{nama_univ}")
+    Call<GetKampus> getKampus(@Path("nama_univ") String nama_univ);
 
 
 }

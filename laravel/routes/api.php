@@ -17,6 +17,7 @@ Route::post('login', 'API\UserController@login');
 Route::get('logout', 'API\UserController@logout');
 Route::post('register', 'API\UserController@register');
 Route::get('kampus', 'API\KampusController@index');
+Route::get('kampus/search/{nama_univ}', 'API\KampusController@search');
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details', 'API\UserController@details');

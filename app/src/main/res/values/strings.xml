@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">KampusKu</string>
     <string name="todo">TODO</string>
+    <string name="list_kampus">List Kampus</string>
+    <string name="berhasil_login">Berhasil Login</string>
+    <string name="log_out">Log Out</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="new_user_register_now">New user? Register Now</string>
+    <string name="use_other_methods">Use other Methods</string>
 </resources>

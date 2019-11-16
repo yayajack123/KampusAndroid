@@ -20,6 +20,14 @@ class KampusController extends Controller
 
     }
 
+    public function search($nama_univ)
+    {
+      $kampus = Kampus::where('nama_univ', 'like', "%{$nama_univ}%")->get();
+      return response()->json([
+        'result' => $kampus
+      ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -1,14 +1,18 @@
 package com.example.kampusku.Kampus;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -33,7 +37,8 @@ public class KampusList extends AppCompatActivity {
     private List<ResultKampus> results = new ArrayList<>();
     private KampusRecyclerViewAdapter viewAdapter;
     BaseApiHelper mApiService;
-
+    private static String EXTRA = "extra";
+    String nama_univ = "";
     RecyclerView recyclerView;
     ProgressBar progressBar;
 
@@ -42,7 +47,26 @@ public class KampusList extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listuniv);
-        recyclerView = (RecyclerView)findViewById(R.id.rv_category);
+        final EditText edtSearch = (EditText) findViewById(R.id.edt_search);
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                nama_univ = edtSearch.getText().toString().trim();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        recyclerView = (RecyclerView) findViewById(R.id.rv_category);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Kampus");
         mApiService = UtilsApi.getAPIService();
@@ -51,14 +75,16 @@ public class KampusList extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(viewAdapter);
-        Log.e("m", "anjing");
+        Log.e("m", "mantap");
         loadDataKategori();
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                startActivity(new Intent(getBaseContext(), MainActivity.class));
                 finish();
                 break;
         }
@@ -71,7 +97,7 @@ public class KampusList extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BaseApiHelper api = retrofit.create(BaseApiHelper.class);
-        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         Call<GetKampus> call = api.getKampus();
         Log.e("PROGRESSSS", "SUDAH SAMPAI SINI");
         call.enqueue(new Callback<GetKampus>() {
@@ -94,29 +120,39 @@ public class KampusList extends AppCompatActivity {
         });
     }
 
-    public void refresh() {
-        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
-        Call<GetKampus> kampusCall = mApiService.getKampus();
-        kampusCall.enqueue(new Callback<GetKampus>() {
-            @Override
-            public void onResponse(Call<GetKampus> call, Response<GetKampus>
-                    response) {
-                List<ResultKampus> kampusList = response.body().getResult();
-                progressBar.setVisibility(View.GONE);
-                String value = response.body().getStatus();
-                Log.d("Retrofit Get", "value: " +
-                        kampusList.toString());
-                Log.d("Retrofit Get", "Jumlah data Kampus: " +
-                        kampusList.size());
-                viewAdapter = new KampusRecyclerViewAdapter(KampusList.this,kampusList);
-                recyclerView.setAdapter(viewAdapter);
-            }
 
-            @Override
-            public void onFailure(Call<GetKampus> call, Throwable t) {
-                Log.e("Retrofit Get", t.toString());
-            }
-        });
-    }
+//    private void loadKampus(String nama_univ) {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(URL)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        BaseApiHelper api = retrofit.create(BaseApiHelper.class);
+//        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+//        Call<GetKampus> bukus = api.getKampus(nama_univ);
+//        bukus.enqueue(new Callback<GetKampus>() {
+//            @Override
+//            public void onResponse(Call<GetKampus> call, Response<GetKampus> response) {
+//                Log.e("PROGRESSSS", "SUDAH SAMPAI SINI2");
+//                progressBar.setVisibility(View.GONE);
+//                String value = response.body().getStatus();
+//                results = response.body().getResult();
+//                Log.e("ERROR", "asa" + results.size());
+//                viewAdapter = new KampusRecyclerViewAdapter(KampusList.this, results);
+//                recyclerView.setAdapter(viewAdapter);
+//                viewAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<GetKampus> call, Throwable t) {
+//
+//            }
+//        });
+//    }
+//
+//    private void tampilkan(List<ResultKampus> kampuses) {
+//        viewAdapter = new KampusRecyclerViewAdapter(KampusList.this, kampuses);
+//        recyclerView.setAdapter(viewAdapter);
+//        viewAdapter.notifyDataSetChanged();
+//    }
 
 }

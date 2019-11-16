@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,16 +36,16 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etEmail;
     EditText etPassword;
     EditText etCPassword;
-    Button btnRegister;
     ProgressDialog loading;
-
+    CircularProgressButton btnRegister;
+    ImageView balik;
     Context mContext;
     BaseApiHelper mApiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.register);
 
         mContext = this;
         mApiService = UtilsApi.getAPIService();
@@ -56,14 +58,21 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.et_emailSignup);
         etPassword = (EditText) findViewById(R.id.et_passwordSignup);
         etCPassword = (EditText) findViewById(R.id.et_passwordSignup2);
-        btnRegister = (Button) findViewById(R.id.button_signupSignup);
-
+        btnRegister = (CircularProgressButton) findViewById(R.id.button_signupSignup);
+        balik = (ImageView) findViewById(R.id.balik);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loading = ProgressDialog.show(mContext, null, "Harap Tunggu...", true, false);
                 requestRegister();
+            }
+        });
+
+        balik.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, LoginActivity.class));
             }
         });
     }

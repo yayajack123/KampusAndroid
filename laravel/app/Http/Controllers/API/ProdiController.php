@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Prodi;
+use App\Kampus;
 use Illuminate\Http\Request;
 
 class ProdiController extends Controller

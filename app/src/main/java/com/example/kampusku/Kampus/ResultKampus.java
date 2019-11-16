@@ -1,9 +1,12 @@
 package com.example.kampusku.Kampus;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResultKampus {
     private int idKampus;
+    @SerializedName("nama_univ")
+    @Expose
     private String nama_univ;
     private String lokasi;
 
