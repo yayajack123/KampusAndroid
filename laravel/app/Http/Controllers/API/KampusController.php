@@ -35,7 +35,7 @@ class KampusController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -46,7 +46,13 @@ class KampusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $kampus = new Kampus;
+        $kampus-> nama_univ = $request->nama_univ;
+        $kampus-> tentang = $request->tentang;
+        $kampus-> lokasi = $request->lokasi;
+        $kampus-> save();
+
+        return "Data Berhasil Masuk";
     }
 
     /**
@@ -55,9 +61,19 @@ class KampusController extends Controller
      * @param  \App\Kampus  $kampus
      * @return \Illuminate\Http\Response
      */
-    public function show(Kampus $kampus)
+    public function show($kampus)
     {
-        //
+        $detail = Kampus::select('tb_kampus.nama_univ','tb_fakultas.id_univ','tb_kampus.tentang as tentang_kampus',
+                                'tb_kampus.lokasi','id_fakultas','nama_fakultas','nama_prodi',
+                                'tb_prodi.tentang as tentang_prodi')
+                ->join('tb_fakultas','tb_fakultas.id_univ','=','tb_kampus.id')
+                ->join('tb_prodi','tb_prodi.id_fakultas','=','tb_fakultas.id')
+                ->where('tb_prodi.id_fakultas',$kampus)
+                ->get();
+
+        return response()->json([
+            'result' => $detail
+            ]);   
     }
 
     /**
@@ -66,9 +82,9 @@ class KampusController extends Controller
      * @param  \App\Kampus  $kampus
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kampus $kampus)
+    public function edit(Kampus $kampus,$id)
     {
-        //
+        
     }
 
     /**
@@ -78,9 +94,19 @@ class KampusController extends Controller
      * @param  \App\Kampus  $kampus
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kampus $kampus)
+    public function update(Request $request, $kampus)
     {
-        //
+        $nama_univ = $request->nama_univ;
+        $tentang = $request->tentang;
+        $lokasi = $request->lokasi;
+
+        $test = Kampus::find($kampus);
+        $test->nama_univ = $nama_univ;
+        $test->tentang = $tentang;
+        $test->lokasi = $lokasi;
+        $test->save();
+
+        return $test;
     }
 
     /**
@@ -89,8 +115,11 @@ class KampusController extends Controller
      * @param  \App\Kampus  $kampus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kampus $kampus)
+    public function destroy($kampus)
     {
-        //
+        $kampus = Kampus::find($kampus);
+        $kampus ->delete();
+
+        return "Data Berhasil di Hapus";
     }
 }

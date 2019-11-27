@@ -1,5 +1,7 @@
 package com.example.kampusku.Kampus;
 
+import android.widget.ListView;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +11,7 @@ public class GetKampus {
 
     String status;
     List<ResultKampus> result = null;
+    List<ResultDetail> test = null;
     String message;
 
     public String getStatus() {
@@ -26,4 +29,5 @@ public class GetKampus {
     public List<ResultKampus> getResult() {
         return result;
     }
+
 }

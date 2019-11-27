@@ -17,8 +17,8 @@ class UserController extends Controller
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('nApp')->accessToken;
-            return response()->json(['status' => 'success','data'=>$success], $this->successStatus);
-        }
+            return response()->json(['status' => 'success','data'=>$success,'user'=>$user], $this->successStatus);
+        }   
         else{
             return response()->json(['error'=>'Unauthorised'], 401);
         }
@@ -50,5 +50,10 @@ class UserController extends Controller
     {
         $user = Auth::user();    
         return response()->json(['success' => $user], $this->successStatus);
+    }
+
+    public function getuser($id){
+        $user = User::where('id',$id)->get()->first();
+        return response()->json($user, $this->successStatus);
     }
 }

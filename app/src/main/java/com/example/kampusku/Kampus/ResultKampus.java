@@ -4,11 +4,19 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResultKampus {
-    private int idKampus;
+    @SerializedName("id")
+    @Expose
+    private int id;
     @SerializedName("nama_univ")
     @Expose
     private String nama_univ;
+    @SerializedName("lokasi")
+    @Expose
     private String lokasi;
+    @SerializedName("tentang")
+    @Expose
+    private String tentang;
+
 
 
     public  String getAlamat(){
@@ -27,11 +35,19 @@ public class ResultKampus {
         this.nama_univ = nama_univ;
     }
 
-    public int getIdKampus() {
-        return idKampus;
+    public int getId() {
+        return id;
     }
 
-    public void setIdKampus(int idKampus) {
-        this.idKampus = idKampus;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTentang() {
+        return tentang;
+    }
+
+    public void setTentang(String tentang) {
+        this.tentang = tentang;
     }
 }

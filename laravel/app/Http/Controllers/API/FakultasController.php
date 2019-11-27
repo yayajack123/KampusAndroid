@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Fakultas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class FakultasController extends Controller
 {
@@ -14,7 +16,7 @@ class FakultasController extends Controller
      */
     public function index()
     {
-        //
+             
     }
 
     /**
@@ -44,9 +46,17 @@ class FakultasController extends Controller
      * @param  \App\Fakultas  $fakultas
      * @return \Illuminate\Http\Response
      */
-    public function show(Fakultas $fakultas)
+    public function show($fakultas)
     {
-        //
+        $detail = Fakultas::select('tb_fakultas.id','nama_fakultas','nama_prodi','tb_prodi.tentang')
+                ->join('tb_prodi','tb_prodi.id_fakultas','=','tb_fakultas.id')
+                ->where('tb_prodi.id_fakultas',$fakultas)
+                ->get();
+
+        return response()->json([
+            'result' => $detail
+            ]);   
+        
     }
 
     /**

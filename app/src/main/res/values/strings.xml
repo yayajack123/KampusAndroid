@@ -8,4 +8,8 @@
     <string name="login_password_hint">Password</string>
     <string name="new_user_register_now">New user? Register Now</string>
     <string name="use_other_methods">Use other Methods</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="favorite">Favorite</string>
+    <string name="account">Account</string>
 </resources>

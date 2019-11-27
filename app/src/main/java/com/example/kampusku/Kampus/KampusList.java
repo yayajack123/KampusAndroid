@@ -3,6 +3,8 @@ package com.example.kampusku.Kampus;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,13 +14,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.example.kampusku.ApiHelper.ApiClient;
 import com.example.kampusku.ApiHelper.BaseApiHelper;
-import com.example.kampusku.ApiHelper.RetrofitClient;
 import com.example.kampusku.ApiHelper.UtilsApi;
 import com.example.kampusku.MainActivity;
 import com.example.kampusku.R;
@@ -41,32 +39,36 @@ public class KampusList extends AppCompatActivity {
     String nama_univ = "";
     RecyclerView recyclerView;
     ProgressBar progressBar;
+    FloatingActionButton gaskan;
+    NestedScrollView test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listuniv);
-        final EditText edtSearch = (EditText) findViewById(R.id.edt_search);
-        edtSearch.addTextChangedListener(new TextWatcher() {
+        setContentView(R.layout.content_main);
+
+        test = (NestedScrollView) findViewById(R.id.nestedScrollView);
+        test.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                nama_univ = edtSearch.getText().toString().trim();
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    gaskan.hide();
+                } else {
+                    gaskan.show();
+                }
             }
         });
 
-
-        recyclerView = (RecyclerView) findViewById(R.id.rv_category);
+        gaskan = (FloatingActionButton) findViewById(R.id.tambah);
+        gaskan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getBaseContext(), TambahKampus.class));
+                finish();
+            }
+        });
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view1);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Kampus");
         mApiService = UtilsApi.getAPIService();
@@ -80,6 +82,7 @@ public class KampusList extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -87,6 +90,8 @@ public class KampusList extends AppCompatActivity {
                 startActivity(new Intent(getBaseContext(), MainActivity.class));
                 finish();
                 break;
+
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -119,40 +124,5 @@ public class KampusList extends AppCompatActivity {
             }
         });
     }
-
-
-//    private void loadKampus(String nama_univ) {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//        BaseApiHelper api = retrofit.create(BaseApiHelper.class);
-//        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-//        Call<GetKampus> bukus = api.getKampus(nama_univ);
-//        bukus.enqueue(new Callback<GetKampus>() {
-//            @Override
-//            public void onResponse(Call<GetKampus> call, Response<GetKampus> response) {
-//                Log.e("PROGRESSSS", "SUDAH SAMPAI SINI2");
-//                progressBar.setVisibility(View.GONE);
-//                String value = response.body().getStatus();
-//                results = response.body().getResult();
-//                Log.e("ERROR", "asa" + results.size());
-//                viewAdapter = new KampusRecyclerViewAdapter(KampusList.this, results);
-//                recyclerView.setAdapter(viewAdapter);
-//                viewAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<GetKampus> call, Throwable t) {
-//
-//            }
-//        });
-//    }
-//
-//    private void tampilkan(List<ResultKampus> kampuses) {
-//        viewAdapter = new KampusRecyclerViewAdapter(KampusList.this, kampuses);
-//        recyclerView.setAdapter(viewAdapter);
-//        viewAdapter.notifyDataSetChanged();
-//    }
 
 }
