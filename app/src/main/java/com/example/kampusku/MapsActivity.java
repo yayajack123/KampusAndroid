@@ -3,11 +3,14 @@ package com.example.kampusku;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -27,25 +30,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.skyfishjy.library.RippleBackground;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
+import android.os.Handler;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlacesClient placesClient;
-    private List<AutocompletePrediction> predictionList;
 
     private Location mLastKnownLocation;
     private LocationCallback locationCallback;
@@ -53,8 +57,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MaterialSearchBar materialSearchBar;
     private View mapView;
     private Button btnFind;
+    private RippleBackground rippleBg;
 
     private final float DEFAULT_ZOOM = 18;
+
+    String address;
 
 
 
@@ -62,17 +69,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        materialSearchBar = findViewById(R.id.searchBar);
         btnFind = findViewById(R.id.btn_find);
+        rippleBg = findViewById(R.id.ripple_bg);
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mapView = mapFragment.getView();
+
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
         Places.initialize(MapsActivity.this, getString(R.string.google_maps_key));
         placesClient = Places.createClient(this);
         final AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+
+
+        btnFind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng currentMarkerLocation = mMap.getCameraPosition().target;
+                rippleBg.startRippleAnimation();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rippleBg.stopRippleAnimation();
+                        Intent i = new Intent(MapsActivity.this,MapsDetailActivity.class);
+                        i.putExtra("City", address);
+                        startActivity(i);
+                        finish();
+                    }
+                }, 5000);
+
+            }
+        });
+
     }
 
 
@@ -98,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            layoutParams.setMargins(0, 0, 40, 250);
+            layoutParams.setMargins(0, 0, 40, 550);
         }
 
         //check if gps is enabled or not and then request user to enable it
@@ -143,6 +175,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
+
+
     @SuppressLint("MissingPermission")
     private void getDeviceLocation() {
         mFusedLocationProviderClient.getLastLocation()
@@ -151,6 +186,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
                             mLastKnownLocation = task.getResult();
+                             String cityName = getCityName(mLastKnownLocation);
                             if (mLastKnownLocation != null) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             } else {
@@ -178,5 +214,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 });
+    }
+
+
+
+    private String getCityName(Location mLastKnownLocation) {
+        String myCity = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(),1);
+            address = addresses.get(0).getLocality();
+            Log.d("logmaps","CITY :"+address);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return myCity;
     }
 }
