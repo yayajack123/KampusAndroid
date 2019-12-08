@@ -1,13 +1,16 @@
 package com.example.kampusku.ApiHelper;
 
+import com.example.kampusku.Fakultas.GetFakultas;
 import com.example.kampusku.Kampus.GetDetail;
 import com.example.kampusku.Kampus.GetKampus;
 import com.example.kampusku.Kampus.PostPutDelKampus;
 import com.example.kampusku.Kampus.ResultKampus;
+import com.example.kampusku.Prodi.GetProdi;
 import com.example.kampusku.User.ValueUser;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -46,6 +49,9 @@ public interface BaseApiHelper {
                                          @Field("tentang") String tentang,
                                          @Field("lokasi") String lokasi);
 
+    @GET("fakultas")
+    Call<GetFakultas> getFakultas();
+
 
     @FormUrlEncoded
     @PUT("kampus/{id}")
@@ -63,5 +69,25 @@ public interface BaseApiHelper {
 
     @GET("getuser/{id}")
     Call<ValueUser> viewUser(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("prodi")
+    Call<ResponseBody> InsertProdi(@Field("nama_prodi") String nama_univ,
+                                    @Field("tentang") String tentang,
+                                    @Field("biaya") int biaya,
+                                    @Field("id_fakultas") int id_fakultas,
+                                    @Field("id_univ") int id_univ);
+
+    @FormUrlEncoded
+    @PUT("prodi/{id}")
+    Call<ResponseBody> UpdateProdi(@Path("id") int id ,
+                                   @Field("nama_prodi") String nama_univ,
+                                   @Field("tentang") String tentang,
+                                   @Field("biaya") int biaya,
+                                   @Field("id_fakultas") int id_fakultas,
+                                   @Field("id_univ") int id_univ);
+
+    @DELETE("prodi/{id}")
+    Call<ResponseBody> DeleteProdi(@Path("id") int id);
 
 }

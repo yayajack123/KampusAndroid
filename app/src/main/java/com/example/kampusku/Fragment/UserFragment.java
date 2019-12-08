@@ -91,6 +91,7 @@ public class UserFragment extends Fragment {
                 emailb.setText(email_user);
                 nama.setText(nama_user);
                 email.setText(email_user);
+                Log.e(TAG, "onResponse: Masuk" );
             }
 
             @Override

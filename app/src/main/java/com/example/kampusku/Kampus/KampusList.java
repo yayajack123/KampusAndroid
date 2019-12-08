@@ -31,7 +31,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class KampusList extends AppCompatActivity {
-    public static final String URL = "http://10.0.2.2:8000/api/";
+    public static final String URL = "https://guarded-woodland-53288.herokuapp.com/api/";
     private List<ResultKampus> results = new ArrayList<>();
     private KampusRecyclerViewAdapter viewAdapter;
     BaseApiHelper mApiService;

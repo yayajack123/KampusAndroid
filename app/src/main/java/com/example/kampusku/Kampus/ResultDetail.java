@@ -2,12 +2,23 @@ package com.example.kampusku.Kampus;
 
 public class ResultDetail {
 
-    int id_univ,id_fakultas;
+    int id_univ;
+    int id_fakultas;
+    int id_prodi;
     String nama_univ;
     String lokasi;
     String nama_fakultas;
     String nama_prodi;
     String tentang_prodi;
+    int biaya;
+
+    public int getId_prodi() {
+        return id_prodi;
+    }
+
+    public void setId_prodi(int id_prodi) {
+        this.id_prodi = id_prodi;
+    }
 
     public int getId_univ() {
         return id_univ;
@@ -65,5 +76,12 @@ public class ResultDetail {
         this.tentang_prodi = tentang_prodi;
     }
 
+    public int getBiaya() {
+        return biaya;
+    }
+
+    public void setBiaya(int biaya) {
+        this.biaya = biaya;
+    }
 
 }

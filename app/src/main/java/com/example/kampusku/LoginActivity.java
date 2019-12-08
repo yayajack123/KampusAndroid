@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                                         editor.putInt(String.valueOf(TAG_ID), jsonRESULTS.getJSONObject("user").getInt("id"));
                                         editor.apply();
                                         Toast.makeText(mContext, "ID ANDA " + id, Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(mContext, MainActivity.class);
+                                        Intent intent = new Intent(mContext, BottomActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }else {

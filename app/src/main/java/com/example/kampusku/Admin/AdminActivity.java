@@ -1,5 +1,6 @@
 package com.example.kampusku.Admin;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +38,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AdminActivity extends AppCompatActivity {
 
-    public static final String URL = "http://10.0.2.2:8000/api/";
+    public static final String URL = "https://guarded-woodland-53288.herokuapp.com/api/";
     private List<ResultKampus> results = new ArrayList<>();
     private KampusRecyclerViewAdapter viewAdapter;
     BaseApiHelper mApiService;
@@ -62,7 +63,6 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-
         sharedPreferences = this.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         session = sharedPreferences.getBoolean(SESSION_STATUS, false);
         token = sharedPreferences.getString(TAG_TOKEN, null);
@@ -80,7 +80,7 @@ public class AdminActivity extends AppCompatActivity {
                 editor.remove(String.valueOf(TAG_ID));
                 editor.remove(String.valueOf(TAG_ADMIN));
                 editor.apply();
-                startActivity(new Intent(getBaseContext(), LoginActivity.class));
+                startActivity(new Intent(getBaseContext(), AdminLoginActivity.class));
                 finish();
             }
         });
@@ -94,8 +94,6 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
         recyclerView = (RecyclerView) findViewById(R.id.rv_admin);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Kampus");
         mApiService = UtilsApi.getAPIService();
         viewAdapter = new KampusRecyclerViewAdapter(this, results);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -132,7 +130,7 @@ public class AdminActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetKampus> call, Throwable t) {
-
+                Log.e("ERROR", "GOBLOk" );
             }
         });
     }

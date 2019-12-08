@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Prodi;
 use App\Kampus;
+use App\Fakultas;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ProdiController extends Controller
@@ -15,7 +17,7 @@ class ProdiController extends Controller
      */
     public function index()
     {
-        //
+       
     }
 
     /**
@@ -25,7 +27,7 @@ class ProdiController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -36,7 +38,15 @@ class ProdiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $prodi = new Prodi;
+        $prodi-> nama_prodi = $request->nama_prodi;
+        $prodi-> tentang = $request->tentang;
+        $prodi-> biaya = $request->biaya;
+        $prodi-> id_fakultas = $request->id_fakultas;
+        $prodi-> id_univ = $request->id_univ;
+        $prodi-> save();
+
+        return "Data Berhasil Masuk";
     }
 
     /**
@@ -68,9 +78,23 @@ class ProdiController extends Controller
      * @param  \App\Prodi  $prodi
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Prodi $prodi)
+    public function update(Request $request, $prodi)
     {
-        //
+        $nama_prodi = $request->nama_prodi;
+        $tentang = $request->tentang;
+        $biaya = $request->biaya;
+        $id_fakultas = $request->id_fakultas;
+        $id_univ = $request->id_univ;
+
+        $test = Prodi::find($prodi);
+        $test->nama_prodi = $nama_prodi;
+        $test->tentang = $tentang;
+        $test->biaya = $biaya;
+        $test->id_fakultas = $id_fakultas;
+        $test->id_univ = $id_univ;
+        $test->save();
+
+        return $test;
     }
 
     /**
@@ -79,8 +103,11 @@ class ProdiController extends Controller
      * @param  \App\Prodi  $prodi
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Prodi $prodi)
+    public function destroy($prodi)
     {
-        //
+        $kampus = Prodi::find($prodi);
+        $kampus ->delete();
+
+        return "Data Berhasil di Hapus";
     }
 }

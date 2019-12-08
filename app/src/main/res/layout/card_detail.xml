@@ -27,14 +27,28 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tentang_prodi"
         android:text="Fakultas"/>
-    <TextView
-        android:id="@+id/ukt"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_below="@+id/fakultas"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fakultas"
-        android:text="Tuituion Free per Semester : IDR 5 - 8 juta"
-        android:textStyle="italic"
-        />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/ukt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fakultas"
+            android:text="Biaya per Semester : "
+            android:textStyle="italic"
+            />
+        <TextView
+            android:id="@+id/biaya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/ukt"
+            android:text="500000"/>
+    </LinearLayout>
+
     <CheckBox
         android:id="@+id/cek1"
         android:layout_width="wrap_content"

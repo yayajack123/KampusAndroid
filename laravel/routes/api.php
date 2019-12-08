@@ -18,6 +18,7 @@ Route::get('logout', 'API\UserController@logout');
 Route::post('register', 'API\UserController@register');
 Route::resource('kampus', 'API\KampusController');
 Route::resource('fakultas','API\FakultasController');
+Route::resource('prodi','API\ProdiController');
 Route::get('gambar/{filename}','API\GambarKampusController@kampusList');
 Route::get('gambar/{id}','API\GambarKampusController@kampusid');
 Route::post('gambar','API\GambarKampusController@kampusSave');

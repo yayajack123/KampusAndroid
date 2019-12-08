@@ -30,7 +30,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailActivity extends AppCompatActivity {
-    public static final String URL = "http://10.0.2.2:8000/api/";
+    public static final String URL = "https://guarded-woodland-53288.herokuapp.com/api/";
     private List<ResultDetail> results = new ArrayList<>();
     private DetailRecylerViewAdapter viewAdapter;
     BaseApiHelper mApiService;

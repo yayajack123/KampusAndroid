@@ -39,6 +39,7 @@ public class DetailRecylerViewAdapter extends RecyclerView.Adapter<DetailRecyler
         holder.Prodi.setText(result.getNama_prodi());
         holder.Deskripsi.setText(result.getTentang_prodi());
         holder.Fakultas.setText(result.getNama_fakultas());
+        holder.UKT.setText(String.valueOf(result.getBiaya()));
 
     }
 
@@ -60,6 +61,7 @@ public class DetailRecylerViewAdapter extends RecyclerView.Adapter<DetailRecyler
             Prodi = itemView.findViewById(R.id.prodi);
             Deskripsi = itemView.findViewById(R.id.tentang_prodi);
             Fakultas = itemView.findViewById(R.id.fakultas);
+            UKT = itemView.findViewById(R.id.biaya);
         }
     }
 }

@@ -12,4 +12,8 @@
     <string name="search">Search</string>
     <string name="favorite">Favorite</string>
     <string name="account">Account</string>
+    <string name="title_activity_bottom">BottomActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

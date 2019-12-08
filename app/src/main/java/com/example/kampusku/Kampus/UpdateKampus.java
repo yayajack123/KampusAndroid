@@ -49,6 +49,7 @@ public class UpdateKampus extends AppCompatActivity {
         edtLokasi.setText(mIntent.getStringExtra("lokasi"));
         mContext = this;
         mApiService = UtilsApi.getAPIService();
+
         initComponents();
     }
 

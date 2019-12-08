@@ -16,7 +16,8 @@ class FakultasController extends Controller
      */
     public function index()
     {
-             
+        $fak = Fakultas::all();
+        return array("result"=>$fak) ;
     }
 
     /**

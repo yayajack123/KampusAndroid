@@ -8,12 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.kampusku.Admin.ProdiActivity;
 import com.example.kampusku.R;
 
 import java.util.List;
@@ -56,11 +54,9 @@ public class KampusRecyclerViewAdapter extends RecyclerView.Adapter<KampusRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntent = new Intent(view.getContext(), DetailActivity.class);
+                Intent mIntent = new Intent(view.getContext(), ProdiActivity.class);
                 mIntent.putExtra("id", results.get(position).getId());
                 mIntent.putExtra("nama_univ", results.get(position).getKampus());
-                mIntent.putExtra("tentang", results.get(position).getTentang());
-                mIntent.putExtra("lokasi", results.get(position).getAlamat());
                 view.getContext().startActivity(mIntent);
             }
         });

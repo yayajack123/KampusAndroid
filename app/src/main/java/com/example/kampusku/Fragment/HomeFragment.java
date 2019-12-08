@@ -25,10 +25,7 @@ import com.example.kampusku.ApiHelper.UtilsApi;
 import com.example.kampusku.Kampus.GetKampus;
 import com.example.kampusku.Kampus.KampusList;
 import com.example.kampusku.Kampus.KampusRecyclerUserAdapter;
-import com.example.kampusku.Kampus.KampusRecyclerViewAdapter;
 import com.example.kampusku.Kampus.ResultKampus;
-import com.example.kampusku.Kampus.TambahKampus;
-import com.example.kampusku.LoginActivity;
 import com.example.kampusku.R;
 
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeFragment extends Fragment {
     Button btnKampus;
-    public static final String URL = "http://10.0.2.2:8000/api/";
+    public static final String URL = "https://guarded-woodland-53288.herokuapp.com/api/";
     private List<ResultKampus> results = new ArrayList<>();
     private KampusRecyclerUserAdapter viewAdapter;
     BaseApiHelper mApiService;
@@ -66,7 +63,6 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(viewAdapter);
         Log.e("m", "mantap");
         loadDataKategori();
-
         return view;
     }
 
@@ -88,7 +84,6 @@ public class HomeFragment extends Fragment {
                 Log.e("ERROR", "asa" + results.size());
                 viewAdapter = new KampusRecyclerUserAdapter(getActivity(), results);
                 recyclerView.setAdapter(viewAdapter);
-
             }
 
             @Override
